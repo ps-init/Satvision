@@ -4,6 +4,7 @@ from pathlib import Path
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
+import numpy as np
 import segmentation_models_pytorch as smp
 
 # Extensions we'll treat as valid input images
@@ -44,6 +45,32 @@ class ThermalToRGBGenerator:
             transforms.Resize((256, 256)),
             transforms.ToTensor()
         ])
+
+    def generate_array(self, input_array):
+        """
+        Run inference on a single image in memory.
+        
+        Args:
+            input_array: numpy array or PIL Image
+            
+        Returns:
+            PIL Image of the generated RGB output
+        """
+        # Convert numpy array to PIL Image if needed
+        if isinstance(input_array, np.ndarray):
+            image = Image.fromarray(input_array.astype('uint8')).convert("RGB")
+        else:
+            image = input_array.convert("RGB")
+
+        tensor = self.transform(image).unsqueeze(0).to(self.device)
+
+        with torch.no_grad():
+            output = self.generator(tensor)
+
+        output = output.squeeze(0).cpu()
+        rgb = transforms.ToPILImage()(output)
+
+        return rgb
 
     def generate(self, input_image, output_image=None):
         """
