@@ -1,14 +1,33 @@
 import os
 from pathlib import Path
 
-import torch
-import torchvision.transforms as transforms
-from PIL import Image
+import cv2
 import numpy as np
+import torch
+from PIL import Image
+
+import numpy as np
+
+from torchvision.transforms import v2
+
 import segmentation_models_pytorch as smp
 
 # Extensions we'll treat as valid input images
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff")
+
+
+def apply_clahe(pil_img):
+    """
+    Matches the exact CLAHE preprocessing used in training.
+    Boosts faint thermal features before passing to the model.
+    (Copied from teammate's inference.py - this step was missing before,
+    and is the likely cause of the earlier bad results.)
+    """
+    img_np = np.array(pil_img.convert("L"))
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    enhanced = clahe.apply(img_np)
+    enhanced_3ch = cv2.cvtColor(enhanced, cv2.COLOR_GRAY2RGB)
+    return Image.fromarray(enhanced_3ch)
 
 
 class ThermalToRGBGenerator:
@@ -33,17 +52,23 @@ class ThermalToRGBGenerator:
             decoder_attention_type="scse"
         ).to(self.device)
 
-        # Load trained weights
-        self.generator.load_state_dict(
-            torch.load(weights_path, map_location=self.device)
-        )
+        # Load trained weights (handles both a raw state_dict and a
+        # full training checkpoint that wraps it in 'generator_state_dict')
+        loaded_data = torch.load(weights_path, map_location=self.device)
 
+        if isinstance(loaded_data, dict) and "generator_state_dict" in loaded_data:
+            state_dict = loaded_data["generator_state_dict"]
+        else:
+            state_dict = loaded_data
+
+        self.generator.load_state_dict(state_dict, strict=True)
         self.generator.eval()
 
-        # Same preprocessing used during training
-        self.transform = transforms.Compose([
-            transforms.Resize((256, 256)),
-            transforms.ToTensor()
+        # Exact same transform pipeline used in training/inference (v2 API)
+        self.transform = v2.Compose([
+            v2.Resize((256, 256)),
+            v2.ToImage(),
+            v2.ToDtype(torch.float32, scale=True),
         ])
 
     def generate_array(self, input_array):
@@ -74,19 +99,26 @@ class ThermalToRGBGenerator:
 
     def generate(self, input_image, output_image=None):
         """
-        Run inference on a single image.
+        Run inference on a single image, matching the teammate's
+        training-time preprocessing exactly (CLAHE + v2 transforms).
         """
 
-        image = Image.open(input_image).convert("RGB")
+        raw_img = Image.open(input_image).convert("RGB")
 
-        tensor = self.transform(image).unsqueeze(0).to(self.device)
+        # Apply CLAHE before anything else - matches training pipeline
+        t_img_clahe = apply_clahe(raw_img)
+
+        tensor = self.transform(t_img_clahe).unsqueeze(0).to(self.device)
 
         with torch.no_grad():
             output = self.generator(tensor)
 
-        output = output.squeeze(0).cpu()
+        # Sigmoid activation guarantees output is in [0, 1]
+        output = output.squeeze(0).cpu().clamp(0, 1)
 
-        rgb = transforms.ToPILImage()(output)
+        rgb = Image.fromarray(
+            (output.permute(1, 2, 0).numpy() * 255).astype(np.uint8)
+        )
 
         if output_image is not None:
 

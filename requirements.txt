@@ -1,0 +1,28 @@
+# Deep Learning
+
+
+# U-Net (used in iris.py)
+segmentation-models-pytorch
+timm
+
+# Object Detection
+ultralytics
+
+# Image Processing
+opencv-python
+Pillow
+numpy
+
+# Visualization
+matplotlib
+
+# Utilities
+tqdm
+PyYAML
+requests
+scipy
+
+# Optional (used by some ultralytics features)
+pandas
+seaborn
+psutil
