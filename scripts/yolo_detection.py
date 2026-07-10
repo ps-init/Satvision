@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 
 import cv2
+import numpy as np
+from PIL import Image
 from ultralytics import YOLO
 
 
@@ -14,6 +16,63 @@ class YOLODetector:
         self.model = YOLO(model_name)
 
         print("YOLO model loaded successfully!")
+
+    def detect_array(self, image_pil):
+        """
+        Run inference on a PIL Image in memory.
+        
+        Args:
+            image_pil: PIL Image object
+            
+        Returns:
+            dict: Detection results with format:
+                {
+                    "total_objects": int,
+                    "object_count": {class_name: count},
+                    "detections": [{"class": str, "confidence": float, "bbox": [x1, y1, x2, y2]}],
+                    "annotated_image": PIL Image with bounding boxes drawn
+                }
+        """
+        # Convert PIL to OpenCV format for processing
+        image_cv = cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR)
+        
+        # Run YOLO inference
+        results = self.model(image_cv, verbose=False)
+        result = results[0]
+        
+        # Get annotated image
+        annotated = result.plot()
+        annotated_pil = Image.fromarray(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB))
+        
+        # Extract detections
+        detections = []
+        object_count = {}
+        
+        for box in result.boxes:
+            cls = int(box.cls.item())
+            conf = float(box.conf.item())
+            x1, y1, x2, y2 = box.xyxy[0].tolist()
+            class_name = self.model.names[cls]
+            
+            detections.append({
+                "class": class_name,
+                "confidence": round(conf, 4),
+                "bbox": [
+                    round(x1, 2),
+                    round(y1, 2),
+                    round(x2, 2),
+                    round(y2, 2)
+                ]
+            })
+            
+            object_count[class_name] = object_count.get(class_name, 0) + 1
+        
+        return {
+            "total_objects": len(detections),
+            "object_count": object_count,
+            "detections": detections,
+            "annotated_image": annotated_pil
+        }
 
     def detect(self, image_path,
                output_image="../output/detected",
