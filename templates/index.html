@@ -23,17 +23,17 @@
 
         <ul>
 
-            <li><a href="#">Home</a></li>
+            <li><a href="#hero">Home</a></li>
 
-            <li><a href="#">About</a></li>
+            <li><a href="#pipeline-section">Pipeline</a></li>
 
-            <li><a href="#">Contact</a></li>
+            <li><a href="#results-section">Results</a></li>
 
         </ul>
 
     </nav>
 
-    <section class="hero">
+    <section class="hero" id="hero">
 
         <h1>
 
@@ -45,7 +45,7 @@
 
         <p>
 
-            SatVision  uses an advanced Pix2Pix GAN to convert thermal imagery
+            SatVision uses an advanced Pix2Pix GAN to convert thermal imagery
             into realistic RGB images and automatically detect critical infrastructure
             such as vehicles, roads, and buildings for disaster response and surveillance.
 
@@ -53,13 +53,13 @@
 
         <div class="buttons">
 
-            <button class="primary">
+            <button class="primary" id="uploadBtnHero">
 
                 Upload Thermal Image
 
             </button>
 
-            <button class="secondary">
+            <button class="secondary" id="learnMoreBtn">
 
                 Learn More
 
@@ -78,12 +78,12 @@
 
         <p>
             Upload a thermal infrared image captured from a drone, satellite, or surveillance camera.
-            SatVision Edge will generate an RGB image and identify critical infrastructure using AI.
+            SatVision will generate an RGB image and identify critical infrastructure using AI.
         </p>
 
         <div class="upload-box">
 
-            <input type="file" id="imageUpload" accept=".png,.jpg,.jpeg,.tif,.tiff" hidden>
+            <input type="file" id="imageUpload" accept=".png,.jpg,.jpeg,.tif,.tiff,.bmp" hidden>
 
             <label for="imageUpload" class="upload-label">
 
@@ -101,7 +101,7 @@
 
                     <strong>
 
-                        PNG • JPG • JPEG • TIFF
+                        PNG • JPG • JPEG • TIFF • BMP
 
                     </strong>
 
@@ -111,10 +111,16 @@
 
         </div>
 
+        <!-- Status Display -->
+        <div class="status-container" id="statusContainer" style="display: none; margin-top: 20px; text-align: center;">
+            <p id="statusText" style="font-size: 16px; color: #4CAF50; font-weight: bold;">Processing...</p>
+            <div class="loading-spinner"></div>
+        </div>
+
     </section>
     <!-- ================= AI PIPELINE ================= -->
 
-    <section class="pipeline-section">
+    <section class="pipeline-section" id="pipeline-section">
 
         <h2>AI Processing Pipeline</h2>
 
@@ -275,7 +281,7 @@
     </section>
     <!-- ================= DETECTION RESULTS ================= -->
 
-    <section class="results-section">
+    <section class="results-section" id="results-section">
 
         <h2>Object Detection Results</h2>
 
@@ -341,45 +347,45 @@
 
         <div class="metrics-grid">
 
-            <!-- FID -->
+            <!-- Total Objects -->
 
             <div class="metric-card">
 
-                <div class="metric-icon">🎯</div>
+                <div class="metric-icon">📊</div>
 
-                <h3>FID Score</h3>
+                <h3>Total Objects</h3>
 
-                <h1 id="fidValue">--</h1>
+                <h1 id="totalObjectsMetric">0</h1>
 
-                <span>Target: &lt; 60</span>
-
-            </div>
-
-            <!-- LPIPS -->
-
-            <div class="metric-card">
-
-                <div class="metric-icon">🧠</div>
-
-                <h3>LPIPS</h3>
-
-                <h1 id="lpipsValue">--</h1>
-
-                <span>Target: &lt; 0.15</span>
+                <span>Detected in image</span>
 
             </div>
 
-            <!-- Latency -->
+            <!-- Processing Time -->
 
             <div class="metric-card">
 
                 <div class="metric-icon">⚡</div>
 
-                <h3>Inference Latency</h3>
+                <h3>Processing Time</h3>
 
-                <h1 id="latencyValue">--</h1>
+                <h1 id="processingTime">--</h1>
 
-                <span>Target: &lt; 1200 ms</span>
+                <span>End-to-end latency</span>
+
+            </div>
+
+            <!-- Model Status -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon">✅</div>
+
+                <h3>API Status</h3>
+
+                <h1 id="apiStatus">--</h1>
+
+                <span id="apiStatusText">Checking...</span>
 
             </div>
 
@@ -391,11 +397,11 @@
 
     <section class="workflow-section">
 
-        <h2>AI Processing Workflow</h2>
+        <h2>How It Works</h2>
 
         <p>
-            SatVision Edge transforms thermal imagery into actionable intelligence
-            through a lightweight edge AI pipeline.
+            SatVision transforms thermal imagery into actionable intelligence
+            through a lightweight AI pipeline.
         </p>
 
         <div class="workflow-container">
@@ -404,7 +410,7 @@
 
                 <div class="step-icon">📤</div>
 
-                <h3>Upload</h3>
+                <h3>1. Upload</h3>
 
                 <p>Thermal Infrared Image</p>
 
@@ -416,9 +422,9 @@
 
                 <div class="step-icon">🎨</div>
 
-                <h3>Pix2Pix GAN</h3>
+                <h3>2. Generate RGB</h3>
 
-                <p>RGB Image Generation</p>
+                <p>Pix2Pix GAN Conversion</p>
 
             </div>
 
@@ -428,9 +434,9 @@
 
                 <div class="step-icon">🛰</div>
 
-                <h3>YOLOv11</h3>
+                <h3>3. Detect Objects</h3>
 
-                <p>Object Detection</p>
+                <p>YOLOv11 Detection</p>
 
             </div>
 
@@ -440,7 +446,7 @@
 
                 <div class="step-icon">📊</div>
 
-                <h3>Results</h3>
+                <h3>4. View Results</h3>
 
                 <p>Metrics & Intelligence</p>
 
