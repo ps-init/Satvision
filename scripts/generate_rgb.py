@@ -31,7 +31,7 @@ def apply_clahe(pil_img):
 
 
 class ThermalToRGBGenerator:
-    def __init__(self, weights_path="../models/weights.pth"):
+    def __init__(self, weights_path="models/weights.pth"):
         """
         Load the trained Generator.
         """
@@ -93,7 +93,7 @@ class ThermalToRGBGenerator:
             output = self.generator(tensor)
 
         output = output.squeeze(0).cpu()
-        rgb = transforms.ToPILImage()(output)
+        rgb = v2.ToPILImage()(output)
 
         return rgb
 
@@ -162,10 +162,10 @@ class ThermalToRGBGenerator:
 if __name__ == "__main__":
 
     model = ThermalToRGBGenerator(
-        "../models/weights.pth"
+        "models/weights.pth"
     )
 
     model.generate_folder(
-        "../input/thermal",
-        "../output/rgb"
+        "input/thermal",
+        "output/rgb"
     )
