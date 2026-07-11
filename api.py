@@ -43,7 +43,7 @@ async def load_models():
 @app.post("/detect")
 async def detect_thermal_image(file: UploadFile = File(...)):
     """
-    Full pipeline: Thermal Image → RGB Generation → Object Detection
+    Full pipeline: Thermal Image → CLAHE Preprocessing → RGB Generation → Object Detection
     
     Args:
         file: Uploaded thermal image (PNG, JPG, etc.)
@@ -58,9 +58,9 @@ async def detect_thermal_image(file: UploadFile = File(...)):
         
         # Read uploaded image
         contents = await file.read()
-        thermal_image = Image.open(io.BytesIO(contents)).convert("RGB")
+        thermal_image = Image.open(io.BytesIO(contents))
         
-        # Step 1: Generate RGB from thermal
+        # Step 1: Generate RGB from thermal (includes CLAHE preprocessing internally)
         print(f"Processing {file.filename}...")
         rgb_image = rgb_generator.generate_array(thermal_image)
         
