@@ -36,8 +36,8 @@ class YOLODetector:
         # Convert PIL to OpenCV format for processing
         image_cv = cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR)
         
-        # Run YOLO inference
-        results = self.model(image_cv, verbose=False)
+        # Run YOLO inference with lower confidence threshold (0.1)
+        results = self.model(image_cv, verbose=False, conf=0.1)
         result = results[0]
         
         # Get annotated image
@@ -66,7 +66,11 @@ class YOLODetector:
             })
             
             object_count[class_name] = object_count.get(class_name, 0) + 1
-        
+        print("\n--- YOLO Detections ---")
+        for name, count in object_count.items():
+            print(f"{name}: {count}")
+        print("-----------------------\n")
+            
         return {
             "total_objects": len(detections),
             "object_count": object_count,
@@ -86,7 +90,7 @@ class YOLODetector:
         output_image.mkdir(parents=True, exist_ok=True)
         output_json.mkdir(parents=True, exist_ok=True)
 
-        results = self.model(str(image_path), verbose=False)
+        results = self.model(str(image_path), verbose=False, conf=0.1)
 
         result = results[0]
 

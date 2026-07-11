@@ -79,14 +79,19 @@ function displayResults(result, processingTime) {
     // Update detection counts
     const objectCount = result.object_count || {};
     
-    // Count vehicles (handle different naming conventions)
-    const vehicleCount = objectCount["car"] || objectCount["vehicle"] || 
-                         objectCount["Car"] || objectCount["Vehicle"] || 0;
+    // Count vehicles (cars, trucks, buses, motorcycles, bicycles)
+    const vehicleClasses = ["car", "truck", "bus", "motorcycle", "bicycle", "vehicle"];
+    let vehicleCount = 0;
+    for (const [cls, count] of Object.entries(objectCount)) {
+        if (vehicleClasses.includes(cls.toLowerCase())) {
+            vehicleCount += count;
+        }
+    }
     document.getElementById("vehicleCount").textContent = vehicleCount;
     
-    // Count buildings
-    const buildingCount = objectCount["building"] || objectCount["Building"] || 0;
-    document.getElementById("buildingCount").textContent = buildingCount;
+    // Count persons
+    const personCount = objectCount["person"] || objectCount["Person"] || 0;
+    document.getElementById("personCount").textContent = personCount;
     
     // Count roads
     const roadCount = objectCount["road"] || objectCount["Road"] || 0;
