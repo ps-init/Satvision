@@ -6,8 +6,6 @@ import numpy as np
 import torch
 from PIL import Image
 
-import numpy as np
-
 from torchvision.transforms import v2
 
 import segmentation_models_pytorch as smp
@@ -20,8 +18,8 @@ def apply_clahe(pil_img):
     """
     Matches the exact CLAHE preprocessing used in training.
     Boosts faint thermal features before passing to the model.
-    (Copied from teammate's inference.py - this step was missing before,
-    and is the likely cause of the earlier bad results.)
+    This step is critical for achieving good results - without it,
+    the model receives underprocessed thermal data and produces poor RGB conversions.
     """
     img_np = np.array(pil_img.convert("L"))
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
@@ -87,6 +85,10 @@ class ThermalToRGBGenerator:
         else:
             image = input_array.convert("RGB")
 
+        # Apply CLAHE before anything else - matches training pipeline
+        # THIS IS CRITICAL FOR GOOD RESULTS
+        image = apply_clahe(image)
+
         tensor = self.transform(image).unsqueeze(0).to(self.device)
 
         with torch.no_grad():
@@ -99,8 +101,7 @@ class ThermalToRGBGenerator:
 
     def generate(self, input_image, output_image=None):
         """
-        Run inference on a single image, matching the teammate's
-        training-time preprocessing exactly (CLAHE + v2 transforms).
+        Run inference on a single image, matching the training-time preprocessing exactly (CLAHE + v2 transforms).
         """
 
         raw_img = Image.open(input_image).convert("RGB")
