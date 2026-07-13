@@ -93,9 +93,9 @@ function displayResults(result, processingTime) {
     const personCount = objectCount["person"] || objectCount["Person"] || 0;
     document.getElementById("personCount").textContent = personCount;
     
-    // Count roads
-    const roadCount = objectCount["road"] || objectCount["Road"] || 0;
-    document.getElementById("roadCount").textContent = roadCount;
+    // Count traffic lights
+    const trafficLightCount = objectCount["traffic light"] || objectCount["Traffic Light"] || 0;
+    document.getElementById("trafficLightCount").textContent = trafficLightCount;
     
     // Calculate average confidence
     let avgConfidence = 0;

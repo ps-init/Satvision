@@ -7,7 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SatVision</title>
+    <title>IRIS</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -18,7 +18,7 @@
     <nav>
 
         <div class="logo">
-            🛰 SatVision 
+            🛰 IRIS 
         </div>
 
         <ul>
@@ -45,9 +45,9 @@
 
         <p>
 
-            SatVision uses an advanced Pix2Pix GAN to convert thermal imagery
+            IRIS uses an advanced Pix2Pix GAN to convert thermal imagery
             into realistic RGB images and automatically detect critical infrastructure
-            such as vehicles, roads, and persons for disaster response and surveillance.
+            such as vehicles, traffic lights, and persons for disaster response and surveillance.
 
         </p>
 
@@ -78,7 +78,7 @@
 
         <p>
             Upload a thermal infrared image captured from a drone, satellite, or surveillance camera.
-            SatVision will generate an RGB image and identify critical infrastructure using AI.
+            IRIS will generate an RGB image and identify critical infrastructure using AI.
         </p>
 
         <div class="upload-box">
@@ -313,11 +313,11 @@
 
             <div class="result-card">
 
-                <div class="result-icon">🛣</div>
+                <div class="result-icon">🚥</div>
 
-                <h3>Roads</h3>
+                <h3>Traffic Lights</h3>
 
-                <h1 id="roadCount">0</h1>
+                <h1 id="trafficLightCount">0</h1>
 
             </div>
 
@@ -400,7 +400,7 @@
         <h2>How It Works</h2>
 
         <p>
-            SatVision transforms thermal imagery into actionable intelligence
+            IRIS transforms thermal imagery into actionable intelligence
             through a lightweight AI pipeline.
         </p>
 
