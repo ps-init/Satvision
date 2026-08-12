@@ -7,7 +7,7 @@ const slider = document.getElementById("slider");
 const overlay = document.getElementById("overlay");
 
 // ==================== API CONFIG ====================
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "";
 let processingStartTime = 0;
 
 // ==================== UPLOAD AND PROCESS ====================

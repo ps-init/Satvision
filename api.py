@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 import io
@@ -10,14 +11,22 @@ from scripts.yolo_detection import YOLODetector
 # Initialize FastAPI app
 app = FastAPI(title="Thermal Object Detection API", version="1.0.0")
 
+# Mount static files (JS, CSS, images)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins (or restrict to ["http://localhost:5000"])
+    allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def root():
+    """Serve the web UI at the root path."""
+    return FileResponse("templates/index.html")
 
 # Global model instances (loaded once at startup)
 rgb_generator = None
