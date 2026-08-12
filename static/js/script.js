@@ -71,15 +71,20 @@ async function processImage(file) {
 function displayResults(result, processingTime) {
     // Show hidden result sections
     document.querySelector(".preview-section").style.display = "block";
-    document.querySelector(".compare-section").style.display = "block";
+    document.querySelector(".object-detection-section").style.display = "block";
     document.querySelector(".results-section").style.display = "block";
     document.querySelector(".metrics-section").style.display = "block";
 
-    // Display RGB image with detections
+    // Display RAW RGB image (no YOLO boxes)
+    if (result.raw_rgb_image_base64) {
+        const rawRgbImage = `data:image/png;base64,${result.raw_rgb_image_base64}`;
+        rgbPreview.src = rawRgbImage;
+    }
+
+    // Display Annotated RGB image with YOLO boxes
     if (result.annotated_image_base64) {
-        const rgbImage = `data:image/png;base64,${result.annotated_image_base64}`;
-        rgbPreview.src = rgbImage;
-        compareAfter.src = rgbImage;
+        const annotatedImage = `data:image/png;base64,${result.annotated_image_base64}`;
+        document.getElementById("annotatedPreview").src = annotatedImage;
     }
     
     // Update detection counts
@@ -146,10 +151,7 @@ function hideLoadingState() {
     }
 }
 
-// ==================== IMAGE COMPARISON SLIDER ====================
-slider.addEventListener("input", function(){
-    overlay.style.width = this.value + "%";
-});
+// Slider removed
 
 // ==================== DRAG AND DROP ====================
 const uploadBox = document.querySelector(".upload-box");

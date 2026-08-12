@@ -651,9 +651,17 @@ AI WORKFLOW
     left: 0;
 
     width: 50%;
+    
+    height: 100%;
 
     overflow: hidden;
 
+}
+
+.img-overlay img {
+    height: 100%;
+    width: auto;
+    max-width: none;
 }
 
 #slider {

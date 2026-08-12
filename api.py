@@ -84,6 +84,12 @@ async def detect_thermal_image(file: UploadFile = File(...)):
             "detections": detection_result["detections"]
         }
         
+        # Add raw RGB image base64
+        raw_rgb_bytes = io.BytesIO()
+        rgb_image.save(raw_rgb_bytes, format="PNG")
+        raw_rgb_b64 = base64.b64encode(raw_rgb_bytes.getvalue()).decode("utf-8")
+        response_data["raw_rgb_image_base64"] = raw_rgb_b64
+        
         # Optional: Include base64-encoded annotated image for visualization
         annotated_img_bytes = io.BytesIO()
         detection_result["annotated_image"].save(annotated_img_bytes, format="PNG")
