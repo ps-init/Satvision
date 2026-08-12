@@ -9,7 +9,7 @@
 
     <title>IRIS</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="/static/css/style.css">
 
 </head>
 
@@ -205,7 +205,7 @@
 
                 </div>
 
-                <img id="thermalPreview" src="{{ url_for('static', filename='images/thermal-placeholder.png') }}"
+                <img id="thermalPreview" src="/static/images/thermal-placeholder.png"
                     alt="Thermal Image">
 
             </div>
@@ -228,7 +228,7 @@
 
                 </div>
 
-                <img id="rgbPreview" src="{{ url_for('static', filename='images/rgb-placeholder.png') }}"
+                <img id="rgbPreview" src="/static/images/rgb-placeholder.png"
                     alt="RGB Image">
 
             </div>
@@ -252,14 +252,14 @@
 
             <!-- RGB Image (Background) -->
 
-            <img id="compareAfter" src="{{ url_for('static', filename='images/rgb-placeholder.png') }}"
+            <img id="compareAfter" src="/static/images/rgb-placeholder.png"
                 alt="Generated RGB Image">
 
             <!-- Thermal Image (Overlay) -->
 
             <div class="img-overlay" id="overlay">
 
-                <img id="compareBefore" src="{{ url_for('static', filename='images/thermal-placeholder.png') }}"
+                <img id="compareBefore" src="/static/images/thermal-placeholder.png"
                     alt="Thermal Image">
 
             </div>
@@ -459,7 +459,7 @@
 
 
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="/static/js/script.js"></script>
 
 </body>
 
