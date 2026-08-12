@@ -69,6 +69,12 @@ async function processImage(file) {
 
 // ==================== DISPLAY RESULTS ====================
 function displayResults(result, processingTime) {
+    // Show hidden result sections
+    document.querySelector(".preview-section").style.display = "block";
+    document.querySelector(".compare-section").style.display = "block";
+    document.querySelector(".results-section").style.display = "block";
+    document.querySelector(".metrics-section").style.display = "block";
+
     // Display RGB image with detections
     if (result.annotated_image_base64) {
         const rgbImage = `data:image/png;base64,${result.annotated_image_base64}`;
